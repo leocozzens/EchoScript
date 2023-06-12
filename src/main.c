@@ -1,6 +1,7 @@
+// C Standard Libraries
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 
 // Local headers
 #include <parse_pipe.h>
@@ -9,14 +10,14 @@
 #define NAME_SIZE 255
 
 int main() {
-    /*printf("\nPlease enter the file you'd like to translate: ");
+    printf("\nPlease enter the file you'd like to translate: ");
     char fileName[NAME_SIZE];
     fgets(fileName, sizeof(fileName), stdin);
-    fileName[strlen(fileName) - 1] = '\0';*/
+    fileName[strlen(fileName) - 1] = '\0';
 
     // Set file pointer
     FILE *pF = NULL;
-    pF = fopen(/*fileName*/"a.test", "r");
+    pF = fopen(fileName, "r");
     if(pF == NULL) {
         printf("Failed to open file...\n");
         return 1;
@@ -38,9 +39,13 @@ int main() {
 
     //printf("file contents:\n%s\n", buffer);
 
-    Token *output = lexFile(buffer, fSize);
+    TokenData *output = lexFile(buffer, fSize);
     if(output == NULL) return 0;
-    printf("And the value is:%s, at %d\n", output->tokenSet[0], output->filePositon[0]);
+    for(int i = 0; i < output->tokenCount; i++)
+        printf("And the value is:-%s, position %d, at index %d\n", output->tokenSet[i], output->filePositon, i + 1);
+
+    grid_free(output->tokenSet, TOKEN_NUM * output->resizesY); // TODO: Struct free function
+    free(output);
 
     fclose(pF);
     return 0;

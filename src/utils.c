@@ -1,4 +1,8 @@
+// Standard C Libraries
 #include <stdlib.h>
+
+// Local headers
+// Will need this package soon #include <structs.h>
 
 char **dynamic_grid(int rows, int columns) {
     char **grid = NULL;

@@ -1,15 +1,15 @@
 #ifndef PARSE_PIPE_H
 #define PARSE_PIPE_H
 
-#define TOKEN_NUM 10
-#define TOKEN_SIZE 20
+// Standard C libraries
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
-typedef struct {
-    char type;
-    char **tokenSet; // Set array of args divided by spaces
-    int *filePositon; // Store positions of blocks
-} Token;
+// Local headers
+#include <structs.h>
+#include <utils.h>
 
-Token *lexFile(const char *buffer, int fSize);
+TokenData *lexFile(char *buffer, int fSize);
 
 #endif
