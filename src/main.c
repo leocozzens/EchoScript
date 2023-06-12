@@ -37,7 +37,7 @@ int main() {
 
     Token *output = lexFile(buffer, fSize);
     if(output == NULL) return 0;
-    printf("And the value is: %s\n", output->args);
+    printf("And the value is:%s\n", output->args);
     free(output->args);
     free(output);
 
