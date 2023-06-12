@@ -1,55 +1,71 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
+// Local headers
+#include <utils.h>
+
+#define TOKEN_NUM 10
 #define TOKEN_SIZE 20
 
 typedef struct {
     char type;
-    char *variable; // Set array of args divided by spaces
+    char **tokenSet; // Set array of args divided by spaces
+    int *filePositon; // Store positions of blocks,TODO: look into making this variable size_t
 } Token;
 
-Token *lexFile(const char *buffer, int fSize) {
+Token *lexFile(char *buffer, int fSize) {
     int i = 0;
     _Bool looking = 1;
+    int tokenIndex = 0;
     int tokenPos = 0;
-    char *token = malloc(TOKEN_SIZE);
-    if(token == NULL) return NULL;
-    Token *retToken = malloc(sizeof(Token));
-    if(retToken == NULL) {
-        free(token);
+    int resizesX = 1;
+    int resizesY = 1;
+
+    Token *retToken = malloc(sizeof(Token)); // TODO: Relegate declaration of token struct in a func
+    if(retToken == NULL) return NULL;
+
+    retToken->filePositon = malloc(TOKEN_NUM * sizeof(int));
+    if(retToken->filePositon == NULL) {
+        free(retToken);
+        return NULL;
+    }
+
+    retToken->tokenSet = dynamic_grid(TOKEN_NUM, TOKEN_SIZE);
+    if(retToken->tokenSet == NULL) {
+        free(retToken->filePositon);
+        free(retToken);
         return NULL;
     }
     while(i < fSize && looking) {
-        if(buffer[i] == '{' && buffer[i + 1] == '{') { // TODO: refactor to nested switch statement, and buffer for efficiency 
+        if(buffer[i] == '{' && buffer[i + 1] == '{') { // TODO: refactor to nested switch statement, and buffer for efficiency
+            retToken->filePositon[tokenIndex] = i;
             i += 2;
             while(i < fSize && !(buffer[i] == '}' && buffer[i + 1] == '}')) {
-                static int resizes = 1;
-                token[tokenPos++] = buffer[i];
+                retToken->tokenSet[tokenIndex][tokenPos++] = buffer[i];
                 i++;
-                if(i >= (resizes * TOKEN_SIZE)) {
-                    token = realloc(token, TOKEN_SIZE * (resizes + 1));
-                    if(token == NULL) {
-                        free(token);
+                if(tokenPos >= (resizesX * TOKEN_SIZE)) {
+                    retToken->tokenSet[tokenIndex] = realloc(retToken->tokenSet[tokenIndex], TOKEN_SIZE * ++resizesX);
+                    if(retToken->tokenSet[tokenIndex] == NULL) {
+                        free(retToken->tokenSet[tokenIndex]);
                         return NULL;
                     }
-                    resizes++;
                 }
             }
             looking = 0;
-            token[tokenPos] = '\0';
+            retToken->tokenSet[tokenIndex][tokenPos] = '\0';
         }
         if(looking) i++;
     }
-    if(!looking) { // Return array of tokens
+    if(!looking) {
         retToken->type = '{';
-        retToken->variable = malloc(strlen(token) + 1);
-        strcpy(retToken->variable, token);
     }
-    else {
+    else { // If no tokens were found free everything
+        grid_free(retToken->tokenSet, TOKEN_NUM * resizesY);
+        free(retToken->filePositon);
         free(retToken);
         retToken = NULL;
     }
-    free(token);
     return retToken;
 }

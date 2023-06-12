@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+// Local headers
 #include <parse_pipe.h>
+#include <utils.h>
 
 #define NAME_SIZE 255
 
 int main() {
-    printf("\nPlease enter the file you'd like to translate: ");
+    /*printf("\nPlease enter the file you'd like to translate: ");
     char fileName[NAME_SIZE];
     fgets(fileName, sizeof(fileName), stdin);
-    fileName[strlen(fileName) - 1] = '\0';
+    fileName[strlen(fileName) - 1] = '\0';*/
 
     // Set file pointer
     FILE *pF = NULL;
-    pF = fopen(fileName, "r");
+    pF = fopen(/*fileName*/"a.test", "r");
     if(pF == NULL) {
         printf("Failed to open file...\n");
         return 1;
@@ -37,9 +40,7 @@ int main() {
 
     Token *output = lexFile(buffer, fSize);
     if(output == NULL) return 0;
-    printf("And the value is:%s\n", output->args);
-    free(output->args);
-    free(output);
+    printf("And the value is:%s, at %d\n", output->tokenSet[0], output->filePositon[0]);
 
     fclose(pF);
     return 0;
