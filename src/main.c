@@ -10,14 +10,14 @@
 #define NAME_SIZE 255
 
 int main() {
-    printf("\nPlease enter the file you'd like to translate: ");
+    /*printf("\nPlease enter the file you'd like to translate: ");
     char fileName[NAME_SIZE];
     fgets(fileName, sizeof(fileName), stdin);
-    fileName[strlen(fileName) - 1] = '\0';
+    fileName[strlen(fileName) - 1] = '\0';*/
 
     // Set file pointer
     FILE *pF = NULL;
-    pF = fopen(fileName, "r");
+    pF = fopen(/*fileName*/"a.test", "r");
     if(pF == NULL) {
         printf("Failed to open file...\n");
         return 1;
@@ -38,17 +38,15 @@ int main() {
     buffer[fSize + 1] = '\0';
 
     //printf("file contents:\n%s\n", buffer);
-
-    TokenData *output = lexFile(buffer, fSize);
-    if(output == NULL) return 0;
+    TokenData *output = runParser(buffer, fSize);
+    if(output == NULL) return 1;
     while(output->nextSet != NULL) {
-        for(int i = 0; i < output->tokenCount; i++)
-            printf("And the value is:-%s, position %d, at index %d\n", output->tokenSet[i], output->filePositon, i + 1);
+        for(int i = 0; i < output->tokenIndex + 1; i++)
+            printf("And the value is:-%s, position %d, at index %d\n", output->tokenSet[i], output->filePositon, i);
         output = output->nextSet;
         printf("\n");
     }
-    grid_free(output->tokenSet, TOKEN_NUM * output->resizesY); // TODO: Struct free function
-    free(output);
+    free_tokens(output);
 
     fclose(pF);
     return 0;

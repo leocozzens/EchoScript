@@ -35,7 +35,7 @@ char **grid_add_rows(char **grid, int height, int width, int moreRows) {
     return newGrid;
 }
 
-int **grid_add_columns(int **grid, int height, int desiredWidth) {
+char **grid_add_columns(char **grid, int height, int desiredWidth) {
     for(int i = 0; i < height; i++) {
         grid[i] = realloc(grid[i], sizeof(*grid[i]) * desiredWidth);
         if(grid[i] == NULL) {
