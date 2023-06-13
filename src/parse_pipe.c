@@ -1,9 +1,5 @@
-// Standard C libraries
 // Local headers
 #include <parse_pipe.h>
-#include <stdio.h>
-#define TOKEN_NUM 10
-#define TOKEN_SIZE 20
 
 TokenData *runParser(char *data, int fSize) { // TODO: This will run the rest of the pipeline
     TokenData *tokenHead = lexFile(data, fSize);
