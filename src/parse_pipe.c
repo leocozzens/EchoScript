@@ -1,21 +1,12 @@
 // Standard C libraries
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
 
 // Local headers
-#include <structs.h>
-#include <utils.h>
+#include <parse_pipe.h>
 
 #define TOKEN_NUM 10
 #define TOKEN_SIZE 20
 
 TokenData *lexFile(char *buffer, int fSize) {
-    int i = 0;
-    _Bool looking = 1;
-    int tokenIndex = 0;
-    int tokenPos = 0;
-
     TokenData *retToken = malloc(sizeof(TokenData)); // TODO: Relegate declaration of token struct in a func
     if(retToken == NULL) return NULL;
 
@@ -24,51 +15,78 @@ TokenData *lexFile(char *buffer, int fSize) {
         free(retToken);
         return NULL;
     }
-    
-    retToken->resizesX = 1;
-    retToken->resizesY = 1;
-    retToken->tokenCount = 1;
 
-    while(i < fSize && looking) {
+    int i = 0;
+    _Bool found = 0;
+    int tokenIndex = 0;
+    int tokenPos = 0;
+
+    TokenData *activeToken = retToken;
+    activeToken->nextSet = NULL;
+    activeToken->resizesX = 1;
+    activeToken->resizesY = 1;
+    activeToken->tokenCount = 1;
+
+    while(i < fSize) {
         if(buffer[i] == '{' && buffer[i + 1] == '{') { // TODO: refactor to nested switch statement, and buffer for efficiency
-            retToken->filePositon = i;
+            found = 1;
+            activeToken->filePositon = i;
             i += 2;
             while(isspace(buffer[i])) i++;
 
-            while(i < fSize && !(buffer[i] == '}' && buffer[i + 1] == '}')) {
-                retToken->tokenSet[tokenIndex][tokenPos++] = buffer[i];
-                i++;
-                if(tokenPos >= (retToken->resizesX * TOKEN_SIZE)) {
-                    retToken->tokenSet = grid_add_columns(retToken->tokenSet, TOKEN_NUM * retToken->resizesY, TOKEN_SIZE * ++retToken->resizesX);
-                    if(retToken->tokenSet[tokenIndex] == NULL) {
-                        free(retToken->tokenSet[tokenIndex]);
+            while(i < fSize) {
+                if(buffer[i] == '}' && buffer[i + 1] == '}') {
+                    activeToken->nextSet = malloc(sizeof(TokenData));
+                    if(activeToken->nextSet == NULL) return NULL;
+                    activeToken = activeToken->nextSet;
+
+                    activeToken->tokenSet = dynamic_grid(TOKEN_NUM, TOKEN_SIZE);
+                    if(activeToken->tokenSet == NULL) {
                         free(retToken);
                         return NULL;
                     }
+
+                    activeToken->nextSet = NULL;
+                    activeToken->resizesX = 1;
+                    activeToken->resizesY = 1;
+                    activeToken->tokenCount = 1;
+                    tokenIndex = 0;
+                    tokenPos = 0;
+                    break;
                 }
-                if(isspace(buffer[i]) && retToken->filePositon + 4 != i) {
-                    retToken->tokenSet[tokenIndex++][tokenPos] = '\0';
-                    retToken->tokenCount++;
+                activeToken->tokenSet[tokenIndex][tokenPos++] = buffer[i];
+                i++;
+                if(tokenPos >= (activeToken->resizesX * TOKEN_SIZE)) {
+                    activeToken->tokenSet = grid_add_columns(activeToken->tokenSet, TOKEN_NUM * activeToken->resizesY, TOKEN_SIZE * ++activeToken->resizesX);
+                    if(activeToken->tokenSet[tokenIndex] == NULL) {
+                        free(activeToken->tokenSet[tokenIndex]);
+                        free(activeToken);
+                        return NULL;
+                    }
+                }
+                if(isspace(buffer[i])) {
+                    activeToken->tokenSet[tokenIndex++][tokenPos] = '\0';
+                    activeToken->tokenCount++;
                     tokenPos = 0;
                     while(isspace(buffer[i])) i++;
                 }
-                if(tokenIndex >= (retToken->resizesY * TOKEN_NUM)) {
-                    retToken->tokenSet = grid_add_rows(retToken->tokenSet, TOKEN_NUM * retToken->resizesY++, TOKEN_SIZE * retToken->resizesX, TOKEN_NUM);
-                    if(retToken->tokenSet == NULL) {
-                        free(retToken->tokenSet);
-                        free(retToken);
+                if(tokenIndex >= (activeToken->resizesY * TOKEN_NUM)) {
+                    activeToken->tokenSet = grid_add_rows(activeToken->tokenSet, TOKEN_NUM * activeToken->resizesY++, TOKEN_SIZE * activeToken->resizesX, TOKEN_NUM);
+                    if(activeToken->tokenSet == NULL) {
+                        free(activeToken->tokenSet);
+                        free(activeToken);
                         return NULL;
                     }
                 }
             }
-            looking = 0;
-            retToken->tokenSet[tokenIndex][tokenPos] = '\0';
-            if(strlen(retToken->tokenSet[tokenIndex]) == 0 && tokenIndex > 0) retToken->tokenCount--;
+            activeToken->tokenSet[tokenIndex][tokenPos] = '\0';
         }
-        if(looking) i++;
+        i++;
     }
-    if(!looking) {
-        retToken->type = '{';
+    if(found) {
+        activeToken->type = '{';
+        trimTokens(retToken);
+        //return linked list
     }
     else { // If no tokens were found free everything
         grid_free(retToken->tokenSet, TOKEN_NUM * retToken->resizesY);
@@ -76,4 +94,13 @@ TokenData *lexFile(char *buffer, int fSize) {
         retToken = NULL;
     }
     return retToken;
+}
+
+void trimTokens(TokenData *firstToken) {
+        TokenData *tmpToken = firstToken;
+        while(tmpToken->nextSet != NULL) {
+            if(strlen(tmpToken->tokenSet[tmpToken->tokenCount - 1]) == 0 && tmpToken->tokenCount > 1)
+                tmpToken->tokenCount--;
+            tmpToken = tmpToken->nextSet;
+        }
 }

@@ -11,5 +11,6 @@
 #include <utils.h>
 
 TokenData *lexFile(char *buffer, int fSize);
+void trimTokens(TokenData *firstToken);
 
 #endif

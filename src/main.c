@@ -41,9 +41,12 @@ int main() {
 
     TokenData *output = lexFile(buffer, fSize);
     if(output == NULL) return 0;
-    for(int i = 0; i < output->tokenCount; i++)
-        printf("And the value is:-%s, position %d, at index %d\n", output->tokenSet[i], output->filePositon, i + 1);
-
+    while(output->nextSet != NULL) {
+        for(int i = 0; i < output->tokenCount; i++)
+            printf("And the value is:-%s, position %d, at index %d\n", output->tokenSet[i], output->filePositon, i + 1);
+        output = output->nextSet;
+        printf("\n");
+    }
     grid_free(output->tokenSet, TOKEN_NUM * output->resizesY); // TODO: Struct free function
     free(output);
 
