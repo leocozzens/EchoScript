@@ -10,14 +10,14 @@
 #define NAME_SIZE 255
 
 int main() {
-    /*printf("\nPlease enter the file you'd like to translate: ");
+    printf("\nPlease enter the file you'd like to translate: ");
     char fileName[NAME_SIZE];
     fgets(fileName, sizeof(fileName), stdin);
-    fileName[strlen(fileName) - 1] = '\0';*/
+    fileName[strlen(fileName) - 1] = '\0';
 
     // Set file pointer
     FILE *pF = NULL;
-    pF = fopen(/*fileName*/"a.test", "r");
+    pF = fopen(fileName, "r");
     if(pF == NULL) {
         printf("Failed to open file...\n");
         return 1;
