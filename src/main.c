@@ -39,7 +39,10 @@ int main() {
 
     //printf("file contents:\n%s\n", buffer);
     TokenData *output = runParser(buffer, fSize);
-    if(output == NULL) return 1;
+    if(output == NULL) {
+        fprintf(stderr, "error: memory allocation failure\n");
+        exit(1);
+    }
     while(output->nextSet != NULL) {
         for(int i = 0; i < output->tokenIndex + 1; i++)
             printf("And the value is:-%s, position %d, at index %d\n", output->tokenSet[i], output->filePositon, i);

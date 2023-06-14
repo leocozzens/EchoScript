@@ -7,7 +7,7 @@ SRCS = $(wildcard $(SRC)/*.c)
 OBJS = $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
 BIN = $(BINDIR)/main.out
 
-SUBMITNAME = OpenTTT.zip
+SUBMITNAME = echoLang.zip
 zip = zip
 
 all: $(BIN)

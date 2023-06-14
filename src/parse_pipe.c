@@ -8,24 +8,14 @@ TokenData *runParser(char *data, int fSize) { // TODO: This will run the rest of
 }
 
 TokenData *lexFile(char *buffer, int fSize) {
-    TokenData *retToken = malloc(sizeof(TokenData)); // TODO: Relegate declaration of token struct in a func
+    TokenData *retToken = NULL; // TODO: Relegate declaration of token struct in a func
+    reserve_token(&retToken);
     if(retToken == NULL) return NULL;
-
-    retToken->tokenSet = dynamic_grid(TOKEN_NUM, TOKEN_SIZE);
-    if(retToken->tokenSet == NULL) {
-        free(retToken);
-        return NULL;
-    }
+    TokenData *activeToken = retToken;
 
     int i = 0;
     _Bool found = 0;
     int tokenPos = 0;
-
-    TokenData *activeToken = retToken;
-    activeToken->nextSet = NULL;
-    activeToken->resizesX = 1;
-    activeToken->resizesY = 1;
-    activeToken->tokenIndex = 0;
 
     while(i < fSize) {
         if(buffer[i] == '{') {
@@ -62,7 +52,10 @@ TokenData *lexFile(char *buffer, int fSize) {
 
 _Bool extract_tokens(char *buffer, int fSize, int *index, TokenData **activeToken, int *tokenPos, char closingOperator) {
     while(*index < fSize) {
-        if(buffer[*index] == closingOperator && buffer[*index + 1] == '}') break;
+        if(buffer[*index] == closingOperator && buffer[*index + 1] == '}') {
+            (*index)++; // If end of command structure at EOF is causing out of bounds look here
+            break;
+        }
         (*activeToken)->tokenSet[(*activeToken)->tokenIndex][(*tokenPos)++] = buffer[(*index)++];
     
         if(*tokenPos >= ((*activeToken)->resizesX * TOKEN_SIZE)) {
@@ -90,13 +83,16 @@ _Bool extract_tokens(char *buffer, int fSize, int *index, TokenData **activeToke
 }
 
 void reserve_token(TokenData **activeToken) {
-    (*activeToken)->nextSet = malloc(sizeof(TokenData));
-    if((*activeToken)->nextSet == NULL) {
+    if(*activeToken == NULL) *activeToken = malloc(sizeof(TokenData));
+    else {
+        (*activeToken)->nextSet = malloc(sizeof(TokenData));
+        *activeToken = (*activeToken)->nextSet;
+    }
+
+    if((*activeToken) == NULL) {
         *activeToken = NULL;
         return;
     }
-    *activeToken = (*activeToken)->nextSet;
-
     (*activeToken)->tokenSet = dynamic_grid(TOKEN_NUM, TOKEN_SIZE);
     if((*activeToken)->tokenSet == NULL) {
         free(*activeToken);
