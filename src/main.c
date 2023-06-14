@@ -4,43 +4,23 @@
 #include <stdlib.h>
 
 // Local headers
-#include <parse_pipe.h>
+#include <file_interface.h>
 #include <utils.h>
+#include <parse_pipe.h>
 
 #define NAME_SIZE 255
 
-int main() {
+int main(void) {
     printf("\nPlease enter the file you'd like to translate: ");
     char fileName[NAME_SIZE];
     fgets(fileName, sizeof(fileName), stdin);
     fileName[strlen(fileName) - 1] = '\0';
 
-    // Set file pointer
-    FILE *pF = NULL;
-    pF = fopen(fileName, "r");
-    if(pF == NULL) {
-        printf("Failed to open file...\n");
-        return 1;
-    }
+    FileData *input = getFile(fileName);
 
-    fseek(pF, 0, SEEK_END); // Sets the file position indicator to the last element in the contiguous block
-    int fSize = ftell(pF); // ftell returns the offset of the position indicator from the initial address
-    rewind(pF); // Returns the position pointer to base
-
-    char *buffer = malloc(fSize + 1); // +1 for null terminator
-    if(buffer == NULL) {
-        fclose(pF);
-        return 1;
-    }
-
-    // Read the file contents into the buffer
-    fread(buffer, sizeof(char), fSize, pF);
-    buffer[fSize + 1] = '\0';
-
-    //printf("file contents:\n%s\n", buffer);
-    TokenData *output = runParser(buffer, fSize);
+    TokenData *output = runParser(input->buffer, input->fSize);
     if(output == NULL) {
-        fprintf(stderr, "error: memory allocation failure\n");
+        fprintf(stderr, "ERORR: Memory allocation failure\n");
         exit(1);
     }
     while(output->nextSet != NULL) {
@@ -51,6 +31,8 @@ int main() {
     }
     free_tokens(output);
 
-    fclose(pF);
+    fclose(input->pF);
+    free(input->buffer);
+    free(input);
     return 0;
 }

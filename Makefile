@@ -13,8 +13,7 @@ zip = zip
 all: $(BIN)
 
 release: CFLAGS=-O2
-release: clean
-release: $(BIN)
+release: new
 
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
