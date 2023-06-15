@@ -11,7 +11,7 @@
 #include <utils.h>
 
 TokenData *runParser(char *data, int fSize);
-TokenData *lexFile(char *buffer, int fSize);
+TokenData *tokenizeFile(char *buffer, int fSize);
 _Bool extract_tokens(char *buffer, int fSize, int *index, TokenData **activeToken, int *tokenPos, char closingOperator);
 void reserve_token(TokenData **activeToken);
 void free_tokens(TokenData *firstToken);

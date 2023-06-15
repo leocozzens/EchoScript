@@ -22,8 +22,18 @@ FileData *getFile(char *fileName) {
 
     // Read the file contents into the buffer
     fread(retData->buffer, sizeof(char), retData->fSize, retData->pF);
-    retData->buffer[retData->fSize + 1] = '\0';
+    retData->buffer[retData->fSize] = '\0';
 
 
     return retData;
+}
+
+void closeFile(FileData **file) {;
+    if(*file == NULL) return;
+    
+    if((*file)->pF != NULL) fclose((*file)->pF);
+    if((*file)->buffer != NULL) free((*file)->buffer);
+    
+    free(*file);
+    *file = NULL;
 }

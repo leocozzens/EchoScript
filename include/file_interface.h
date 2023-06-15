@@ -11,7 +11,7 @@ typedef struct {
     int fSize;
 } FileData;
 
-
 FileData *getFile(char *fileName);
+void closeFile(FileData **file);
 
 #endif

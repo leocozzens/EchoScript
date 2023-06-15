@@ -2,12 +2,12 @@
 #include <parse_pipe.h>
 
 TokenData *runParser(char *data, int fSize) { // TODO: This will run the rest of the pipeline
-    TokenData *tokenHead = lexFile(data, fSize);
-    if(tokenHead == NULL) return NULL;
+    TokenData *tokenHead = tokenizeFile(data, fSize);
+    //if(tokenHead->type != '0') transformTokens(tokenHead);
     return tokenHead;
 }
 
-TokenData *lexFile(char *buffer, int fSize) {
+TokenData *tokenizeFile(char *buffer, int fSize) {
     TokenData *retToken = NULL; // TODO: Relegate declaration of token struct in a func
     reserve_token(&retToken);
     if(retToken == NULL) return NULL;
@@ -25,6 +25,7 @@ TokenData *lexFile(char *buffer, int fSize) {
                 {
                     found = 1;
                     activeToken->filePositon = i;
+                    activeToken->type = operator;
                     i += 2;
                     while(isspace(buffer[i])) i++;
                     if(extract_tokens(buffer, fSize, &i, &activeToken, &tokenPos, '}')) {
@@ -40,13 +41,8 @@ TokenData *lexFile(char *buffer, int fSize) {
         }
         i++;
     }
-    if(found) {
-        activeToken->type = '{';
-    }
-    else { // If no tokens were found free everything
-        free_tokens(retToken);
-        retToken = NULL;
-    }
+    if(!found) // If no tokens set type to none
+        retToken->type = '0';
     return retToken;
 }
 
