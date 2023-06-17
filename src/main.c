@@ -12,13 +12,13 @@
 #define END_LINE '\n'
 
 int main(void) {
-    printf("\nPlease enter the file you'd like to translate: ");
+    /*printf("\nPlease enter the file you'd like to translate: ");
     char fileName[NAME_SIZE];
     fgets(fileName, sizeof(fileName), stdin);
     char *endLine = strchr(fileName, END_LINE);
-    if(endLine != NULL) *endLine = '\0';
+    if(endLine != NULL) *endLine = '\0';*/
 
-    FileData *input = getFile(fileName);
+    FileData *input = getFile(/*fileName*/"a.test");
 
     render(input->buffer, input->fSize);
 

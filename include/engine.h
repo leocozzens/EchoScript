@@ -6,7 +6,6 @@
 
 // Local headers
 #include <parser.h>
-#include <structs.h>
 
 void render(char *data, int fSize);
 

@@ -11,7 +11,7 @@
 #include <utils.h>
 
 TokenData *tokenize_file(char *buffer, int fSize);
-_Bool extract_tokens(char *buffer, int fSize, int *index, TokenData *activeToken, int *tokenPos, char closingOperator);
+_Bool extract_tokens(char *buffer, int fSize, int *index, TokenData **activeToken, int *tokenPos, char closingOperator);
 void reserve_token(TokenData **activeToken);
 void free_tokens(TokenData *firstToken);
 
