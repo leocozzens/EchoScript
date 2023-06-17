@@ -11,7 +11,7 @@ typedef struct TokenData {
     int tokenIndex;
     int resizesX;
     int resizesY;
-    struct TokenData *nextSet;
+    struct TokenData *prevSet;
 } TokenData;
 
 #endif
