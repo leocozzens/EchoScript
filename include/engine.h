@@ -7,6 +7,7 @@
 // Local headers
 #include <parser.h>
 
-void render(char *data, int fSize);
+FileData *render(FileData *inFile);
+void transform_tokens(char *inBuff, int buffSize, char *outBuff, TokenData *tokenHead);
 
 #endif

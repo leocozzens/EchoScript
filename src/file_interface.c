@@ -1,6 +1,21 @@
 #include <file_interface.h>
 
-FileData *getFile(char *fileName) {
+void clear_input(void) {
+    int nextCh;
+    while((nextCh = fgetc(stdin)) != '\n' && nextCh != EOF);
+}
+
+char *get_input(char *request, char *retStr, int buffSize) {
+    printf("%s", request);
+    char input[buffSize];
+    fgets(input, buffSize, stdin);
+    char *endLine = strchr(input, '\n');
+    if(endLine != NULL) *endLine = '\0';
+    else clear_input();
+    strcpy(retStr, input);
+}
+
+FileData *get_file(char *fileName) {
     FileData *retData = malloc(sizeof(FileData));
     retData->pF = fopen(fileName, "r");
     if(retData->pF == NULL) { // TODO: Check file type and return an error if it is not a text file
@@ -28,7 +43,7 @@ FileData *getFile(char *fileName) {
     return retData;
 }
 
-void closeFile(FileData **file) {;
+void close_file(FileData **file) {;
     if(*file == NULL) return;
     
     if((*file)->pF != NULL) fclose((*file)->pF);
@@ -36,4 +51,14 @@ void closeFile(FileData **file) {;
     
     free(*file);
     *file = NULL;
+}
+
+void write_text(char *fileName, FileData *writeFile) {
+    writeFile->pF = fopen(fileName, "w");
+    if(writeFile == NULL) {
+        perror("ERROR");
+        exit(1);
+    }
+
+    fprintf(writeFile->pF, "%s", writeFile->buffer);
 }

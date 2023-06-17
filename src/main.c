@@ -9,19 +9,20 @@
 #include <engine.h>
 
 #define NAME_SIZE 255
-#define END_LINE '\n'
 
 int main(void) {
-    printf("\nPlease enter the file you'd like to translate: ");
     char fileName[NAME_SIZE];
-    fgets(fileName, sizeof(fileName), stdin);
-    char *endLine = strchr(fileName, END_LINE);
-    if(endLine != NULL) *endLine = '\0';
+    get_input("\nPlease enter the file you'd like to translate: ", fileName, NAME_SIZE);
 
-    FileData *input = getFile(fileName);
+    FileData *input = get_file(fileName);
 
-    render(input->buffer, input->fSize);
+    FileData *output = render(input);
+    close_file(&input);
 
-    closeFile(&input);
+    get_input("\nPlease enter the file destination: ", fileName, NAME_SIZE);
+
+    write_text(fileName, output);
+
+    close_file(&output);
     return 0;
 }

@@ -46,10 +46,7 @@ TokenData *tokenize_file(char *buffer, int fSize) {
 
 _Bool extract_tokens(char *buffer, int fSize, int *index, TokenData **activeToken, int *tokenPos, char closingOperator) {
     while(*index + 1 < fSize) {
-        if(buffer[*index] == closingOperator && buffer[*index + 1] == '}') {
-            (*index)++; // If end of command structure at EOF is causing out of bounds look here
-            break;
-        }
+        if(buffer[*index] == closingOperator && buffer[*index + 1] == '}') break;
         (*activeToken)->tokenSet[(*activeToken)->tokenIndex][(*tokenPos)++] = buffer[(*index)++];
     
         if(*tokenPos >= ((*activeToken)->resizesX * TOKEN_SIZE)) {
