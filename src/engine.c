@@ -54,6 +54,12 @@ void transform_tokens(char *inBuff, int buffSize, char *outBuff, TokenData *toke
     while(oldIter < buffSize) {
         if(oldIter == activeToken->filePositon) {
             printf("\nFile position: %d\nlastIndex = %d\noldIter: %d\n", activeToken->filePositon, activeToken->lastIndex, oldIter);
+
+            for(int i = 0; i <= activeToken->tokenIndex; i++) {
+                for(int j = 0; j < strlen(activeToken->tokenSet[i]); j++) {
+                    outBuff[newIter++] = activeToken->tokenSet[i][j];
+                }
+            }
             oldIter += activeToken->lastIndex - activeToken->filePositon;
             if(activeToken->nextSet != NULL) activeToken = activeToken->nextSet;
         }

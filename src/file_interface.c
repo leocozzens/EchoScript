@@ -8,7 +8,7 @@ void clear_input(void) {
 char *get_input(char *request, char *retStr, int buffSize) {
     printf("%s", request);
     char input[buffSize];
-    fgets(input, buffSize, stdin);
+    if(!fgets(input, buffSize, stdin)) exit(0);
     char *endLine = strchr(input, '\n');
     if(endLine != NULL) *endLine = '\0';
     else clear_input();
