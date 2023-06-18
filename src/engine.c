@@ -26,7 +26,7 @@ FileData *render(FileData *inFile) { // TODO: When procedures become more comple
                 break;
             case '{':
                 for(int i = 0; i < activeToken->tokenIndex + 1; i++) {
-                    printf("The value is:-%s, position %d, at index %d\n", activeToken->tokenSet[i], activeToken->filePositon, i);
+                    printf("The value is:-%s, position %ld, at index %d\n", activeToken->tokenSet[i], activeToken->filePositon, i);
                 }
                 break;
 
@@ -49,11 +49,11 @@ FileData *render(FileData *inFile) { // TODO: When procedures become more comple
 
 void transform_tokens(char *inBuff, int buffSize, char *outBuff, TokenData *tokenHead) {
     TokenData *activeToken = tokenHead;
-    int newIter = 0;
-    int oldIter = 0;
+    size_t newIter = 0;
+    size_t oldIter = 0;
     while(oldIter < buffSize) {
         if(oldIter == activeToken->filePositon) {
-            printf("\nFile position: %d\nlastIndex = %d\noldIter: %d\n", activeToken->filePositon, activeToken->lastIndex, oldIter);
+            printf("\nFile position: %ld\nlastIndex = %ld\noldIter: %ld\n", activeToken->filePositon, activeToken->lastIndex, oldIter);
 
             for(int i = 0; i <= activeToken->tokenIndex; i++) {
                 for(int j = 0; j < strlen(activeToken->tokenSet[i]); j++) {

@@ -9,9 +9,9 @@
 typedef struct TokenData {
     char type;
     char **tokenSet; // Set array of args divided by spaces
-    int filePositon; // Store positions of blocks,TODO: look into making this variable size_t
+    size_t filePositon; // Store positions of blocks
     int tokenIndex;
-    int lastIndex;
+    size_t lastIndex;
     int resizesX;
     int resizesY;
     struct TokenData *nextSet;
@@ -20,7 +20,7 @@ typedef struct TokenData {
 typedef struct {
     FILE *pF;
     char *buffer;
-    int fSize;
+    size_t fSize;
 } FileData;
 
 #endif

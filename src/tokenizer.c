@@ -1,11 +1,11 @@
 // Local headers
 #include <tokenizer.h>
 
-TokenData *tokenize_file(char *buffer, int fSize) {
+TokenData *tokenize_file(char *buffer, size_t fSize) {
     TokenData *tokenHead = NULL;
     TokenData *activeToken = NULL;
 
-    int i = 0;
+    size_t i = 0;
     _Bool found = 0;
     int tokenPos = 0;
 
@@ -44,7 +44,7 @@ TokenData *tokenize_file(char *buffer, int fSize) {
     return tokenHead;
 }
 
-_Bool extract_tokens(char *buffer, int fSize, int *index, TokenData **activeToken, int *tokenPos, char closingOperator) {
+_Bool extract_tokens(char *buffer, size_t fSize, size_t *index, TokenData **activeToken, int *tokenPos, char closingOperator) {
     while(*index + 1 < fSize) {
         if(buffer[*index] == closingOperator && buffer[*index + 1] == '}') break;
         (*activeToken)->tokenSet[(*activeToken)->tokenIndex][(*tokenPos)++] = buffer[(*index)++];

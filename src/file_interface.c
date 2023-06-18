@@ -17,6 +17,10 @@ char *get_input(char *request, char *retStr, int buffSize) {
 
 FileData *get_file(char *fileName) {
     FileData *retData = malloc(sizeof(FileData));
+    if(retData == NULL) {
+        fprintf(stderr, "ERROR: Memory allocation failure\n");
+        exit(1);
+    }
     retData->pF = fopen(fileName, "r");
     if(retData->pF == NULL) { // TODO: Check file type and return an error if it is not a text file
         perror("ERROR");
@@ -36,9 +40,13 @@ FileData *get_file(char *fileName) {
     }
 
     // Read the file contents into the buffer
-    fread(retData->buffer, sizeof(char), retData->fSize, retData->pF);
+    size_t bytesRead = fread(retData->buffer, sizeof(char), retData->fSize, retData->pF);
+    if (bytesRead != retData->fSize) {
+        fprintf(stderr, "ERROR: Failed to read the entire file\n");
+        close_file(&retData);
+        exit(1);
+    }
     retData->buffer[retData->fSize] = '\0';
-
 
     return retData;
 }
@@ -47,7 +55,7 @@ void close_file(FileData **file) {;
     if(*file == NULL) return;
     
     if((*file)->pF != NULL) fclose((*file)->pF);
-    if((*file)->buffer != NULL) free((*file)->buffer);
+    free((*file)->buffer);
     
     free(*file);
     *file = NULL;
@@ -55,7 +63,7 @@ void close_file(FileData **file) {;
 
 void write_text(char *fileName, FileData *writeFile) {
     writeFile->pF = fopen(fileName, "w");
-    if(writeFile == NULL) {
+    if(writeFile->pF == NULL) {
         perror("ERROR");
         exit(1);
     }

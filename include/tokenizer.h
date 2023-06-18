@@ -10,8 +10,8 @@
 #include <structs.h>
 #include <utils.h>
 
-TokenData *tokenize_file(char *buffer, int fSize);
-_Bool extract_tokens(char *buffer, int fSize, int *index, TokenData **activeToken, int *tokenPos, char closingOperator);
+TokenData *tokenize_file(char *buffer, size_t fSize);
+_Bool extract_tokens(char *buffer, size_t fSize, size_t *index, TokenData **activeToken, int *tokenPos, char closingOperator);
 void reserve_token(TokenData **activeToken);
 void free_tokens(TokenData *firstToken);
 

@@ -3,6 +3,6 @@
 
 #include <tokenizer.h>
 
-TokenData *run_pipeline(char *data, int fSize);
+TokenData *run_pipeline(char *data, size_t fSize);
 
 #endif

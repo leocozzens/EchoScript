@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Iinclude
+CFLAGS = -Iinclude -g
 SRC = src
 OBJ = obj
 BINDIR = bin
@@ -12,7 +12,7 @@ zip = zip
 
 all: $(BIN)
 
-release: CFLAGS=-O2
+release: CFLAGS = -Iinclude -O2
 release: new
 
 $(BIN): $(OBJS)
