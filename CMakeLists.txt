@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22.1)
-project(EchoScript VERSION 1.0 LANGUAGES C)
+project(EchoScript VERSION 0.0.1 LANGUAGES C)
 
 # General build settings
 set(CMAKE_C_STANDARD 17)

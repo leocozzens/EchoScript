@@ -15,10 +15,11 @@ int main(int argc, char **argv) {
     }
     char *strings[] = {
         argv[1],
-        " test 123"
+        " test",
+        " 123"
     };
 
-    char *buffer = str_combine(2, strings);
+    char *buffer = str_combine(sizeof(strings)/sizeof(char*), strings);
     for(int i = 0; i < 5; i++) {
         system(buffer);
     }
