@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22.1)
 
 # Sources and test naming
-set(NAME "run_tests")
+set(TEST_NAME "run_tests")
 set(TEST_SRCS demo_tests.c)
 set(FRAMEWORK Unity)
 
@@ -16,22 +16,22 @@ target_include_directories(
 )
 
 # Create test executable
-add_executable(${NAME} ${TEST_SRCS})
+add_executable(${TEST_NAME} ${TEST_SRCS})
 target_include_directories(
-    ${NAME} PRIVATE 
+    ${TEST_NAME} PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 target_link_libraries(
-    ${NAME} PRIVATE
+    ${TEST_NAME} PRIVATE
     ${FRAMEWORK}
     ${COMMON_LIB}
     ${DEPENDENCIES}
 )
-set(BINDIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set_target_properties(
-    ${NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${BINDIR}
+    ${TEST_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR}
 )
 
 # Run tests
-add_test(NAME ${NAME} COMMAND ${NAME})
+add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})

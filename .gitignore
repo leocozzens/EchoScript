@@ -52,7 +52,7 @@ Mkfile.old
 dkms.conf
 
 # VSCode settings
-.VSCode
+.vscode
 
 # CMake build directory
 build/

@@ -14,11 +14,11 @@ endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 # Source files
-set(SRCDIR src/)
 set(MAIN_SRC main.c)
-set(MODULES test.c)
-list(TRANSFORM MAIN_SRC PREPEND ${SRCDIR})
-list(TRANSFORM MODULES PREPEND ${SRCDIR})
+set(MODULES "")
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+list(TRANSFORM MAIN_SRC PREPEND ${SRC_DIR})
+list(TRANSFORM MODULES PREPEND ${SRC_DIR})
 
 # Dependencies
 set(
@@ -61,8 +61,11 @@ else()
 endif()
 
 # Set output directory primary executable
-set(BINDIR ${CMAKE_BINARY_DIR}/bin)
+set(BIN_DIR ${CMAKE_BINARY_DIR}/bin)
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${BINDIR}
+    RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR}
 )
+
+# Add demo target
+add_subdirectory(demo)
